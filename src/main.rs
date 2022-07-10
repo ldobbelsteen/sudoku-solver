@@ -28,7 +28,7 @@ fn main() {
     };
 
     let mut num_solved = 0;
-    let mut num_solved_without_brute_force = 0;
+    let mut num_brute_forces = 0;
 
     let reader = BufReader::new(input_file);
     for line in reader.lines() {
@@ -36,9 +36,7 @@ fn main() {
         let solution = Solver::solve(puzzle).unwrap();
 
         num_solved += 1;
-        if !solution.used_brute_force {
-            num_solved_without_brute_force += 1;
-        }
+        num_brute_forces += solution.brute_forces;
 
         if let Some(output_file) = &mut output_file {
             let _ = output_file
@@ -52,5 +50,5 @@ fn main() {
         println!("Output file: {}", output);
     }
     println!("Total solved: {}", num_solved);
-    println!("Without brute-force: {}", num_solved_without_brute_force);
+    println!("Total brute-force fills: {}", num_brute_forces)
 }

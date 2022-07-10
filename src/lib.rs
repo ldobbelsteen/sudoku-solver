@@ -18,7 +18,7 @@ fn index_to_3x3_coords(idx: usize) -> (usize, usize) {
 #[derive(Debug)]
 pub struct Solution {
     cells: [[u8; 9]; 9],
-    pub used_brute_force: bool,
+    pub brute_forces: u8,
 }
 
 impl fmt::Display for Solution {
@@ -104,6 +104,7 @@ pub struct Solver {
     value_occurrences: Occurrences<bool>,
     candidate_occurrences: Occurrences<u8>,
     unfilled_cells: u8,
+    brute_force_fills: u8,
 }
 
 impl Default for Solver {
@@ -113,6 +114,7 @@ impl Default for Solver {
             value_occurrences: Default::default(),
             candidate_occurrences: Default::default(),
             unfilled_cells: 9 * 9,
+            brute_force_fills: 0,
         }
     }
 }
@@ -148,7 +150,7 @@ impl Solver {
                     Cell::Candidates(_) => 0,
                 })
             }),
-            used_brute_force: brute_force,
+            brute_forces: grid.brute_force_fills,
         })
     }
 
@@ -325,6 +327,7 @@ impl Solver {
                         for candidate in cs {
                             let mut branch = self.clone();
                             if let Ok(_) = branch.fill(coords, *candidate) {
+                                branch.brute_force_fills += 1;
                                 if let Ok(branch) = branch.brute_force() {
                                     return Ok(branch);
                                 }
